@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { login, getMe } from "../../WebAPI";
 import { setAuthToken } from "../../utils";
 import { AuthContext } from "../../contexts";
+import { register } from "../../WebAPI";
 const Container = styled.div`
   width: 80%;
   margin: 0px auto;
@@ -16,34 +16,29 @@ const LoginContainer = styled.div`
 const ErrorMessage = styled.div`
   color: red;
 `;
-export default function LoginPage() {
-  const { setUser } = useContext(AuthContext);
-  const history = useHistory();
+export default function RegisterPage() {
+  const [nickname, setNickname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
   const [errorMessage, setErrorMessage] = useState();
   const handleSubmit = (e) => {
-    setErrorMessage(null);
-    login(username, password).then((data) => {
-      // 登入失敗
-      if (data.ok === 0) {
-        return setErrorMessage(data.message);
-      }
-      setAuthToken(data.token);
-      getMe().then((response) => {
-        if (response.ok !== 1) {
-          setAuthToken(null);
-          return setErrorMessage(response.toString());
-        }
-        setUser(response.data);
-        history.push("/");
-      });
-    });
+    register(nickname, username, password);
+    history.push("/");
   };
   return (
     <Container>
       <LoginContainer>
         <form onSubmit={handleSubmit}>
+          <div>
+            nickname:{" "}
+            <input
+              value={nickname}
+              onChange={(e) => {
+                setNickname(e.target.value);
+              }}
+            />
+          </div>
           <div>
             username:{" "}
             <input
@@ -63,7 +58,7 @@ export default function LoginPage() {
               }}
             />
           </div>
-          <button>登入</button>
+          <button>輸入</button>
         </form>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </LoginContainer>
