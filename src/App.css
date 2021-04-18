@@ -85,8 +85,8 @@ ul {
   width: 34px;
 }
 .board {
-  height: 156%;
-  width: 34%;
+  height: 627px;
+  width: 636px;
   display: flex;
   flex-wrap: wrap;
   position: absolute;
